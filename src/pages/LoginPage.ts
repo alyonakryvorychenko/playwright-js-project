@@ -8,6 +8,8 @@ export class LoginPage {
     readonly errorMessage: Locator;
     readonly logout: Locator;
     readonly menuButton: Locator;
+
+    readonly url_base = process.env.BASE_URL || 'https://www.saucedemo.com/';
     
 
     constructor(page: Page) {
@@ -22,8 +24,7 @@ export class LoginPage {
     }
 
     async goto(){
-        await this.page.goto(process.env.BASE_URL || 'https://www.saucedemo.com/');
-        // await expect(this.page).toHaveTitle('Swag Labs');
+        await this.page.goto(this.url_base);
     }
 
     async login(username: string, password: string) {

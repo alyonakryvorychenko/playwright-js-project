@@ -37,7 +37,7 @@ test.describe('Login page tests', () => {
      test('Logout option', async ({page}) => {
         await loginPage.goto();
         await loginPage.login(validUsername, validPassword);
-        await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+        await expect(page).toHaveURL(loginPage.url_base+'inventory.html');
         await loginPage.clickMenuLink(loginPage.logout);
     });
 });
