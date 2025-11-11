@@ -28,7 +28,7 @@ test.describe('Product Catalog test', () => {
         await catalogPage.openProductView();
         await checkoutPage.addProductToCart();
         await checkoutPage.openCart()
-        const productInfoCart = await checkoutPage.productInfoCart();
+        const productInfoCart = await checkoutPage.getProductInfoCart();
         expect(productInfoCart).toEqual(productInfoCatalog);
         await checkoutPage.fillCustomInfo();
         await checkoutPage.finishCheckout()

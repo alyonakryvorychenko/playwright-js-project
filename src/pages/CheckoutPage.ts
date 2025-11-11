@@ -1,4 +1,6 @@
-import { Locator, expect, Page } from '@playwright/test'
+import { Locator, expect, Page } from '@playwright/test';
+import { userData } from '../../test-data/userData';
+import { checkoutTexts } from '../../test-data/uiText';
 
 export class CheckoutPage {
     readonly page: Page;
@@ -17,7 +19,6 @@ export class CheckoutPage {
     readonly productInfoName: Locator;
     readonly productInfoPrice: Locator
     readonly productInfoDescription: Locator;
-    readonly checkoutBt: Locator;
 
 
 
@@ -37,18 +38,17 @@ export class CheckoutPage {
         this.shoppingCartBadge = page.locator('.shopping_cart_badge');
         this.productInfoName = page.locator('[data-test="inventory-item-name"]');
         this.productInfoPrice = page.locator('[data-test="inventory-item-price"]');
+        this.productInfoPrice = page.locator('[data-test="inventory-item-price"]');
         this.productInfoDescription = page.locator('[data-test="inventory-item-desc"]');
-        this.checkoutBt = page.locator('#checkout');
 
     }
-
     async addProductToCart() {
         await this.addToCartBt.click();
         expect(this.removeItemBt).toHaveText('Remove');
         expect(this.shoppingCartBadge).toHaveText('1');
     }
 
-    async productInfoCart() {
+    async getProductInfoCart() {
         const name = await this.productInfoName.first().innerText();
         const description = await this.productInfoDescription.first().innerText();
         const price = await this.productInfoPrice.first().innerText();
@@ -57,22 +57,22 @@ export class CheckoutPage {
 
     async openCart() {
         await this.shoppingCart.click();
-        expect(this.titleCheckout).toHaveText('Your Cart');
+        expect(this.titleCheckout).toHaveText(checkoutTexts.titleCart);
     }
 
 
     async fillCustomInfo() {
         await this.checkoutBt.click();
-        expect(this.titleCheckout).toHaveText('Checkout: Your Information');
-        await this.checkoutInfFirstName.fill('John');
-        await this.checkoutInfLastName.fill('Doe');
-        await this.checkoutInfZipPostalCode.fill('12345');
+        expect(this.titleCheckout).toHaveText(checkoutTexts.titleCheckout);
+        await this.checkoutInfFirstName.fill(userData.firstName);
+        await this.checkoutInfLastName.fill(userData.lastName);
+        await this.checkoutInfZipPostalCode.fill(userData.zipCode);
         await this.continueBt.click();
     }
 
     async finishCheckout() {
-        expect(this.titleCheckout).toHaveText('Checkout: Overview');
+        expect(this.titleCheckout).toHaveText(checkoutTexts.titleCheckoutOverview);
         await this.finishBt.click();
-        expect(this.completeHeader).toHaveText('Thank you for your order!');
+        expect(this.completeHeader).toHaveText(checkoutTexts.completeHeader);
     }
 }

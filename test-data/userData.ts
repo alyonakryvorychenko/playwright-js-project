@@ -1,0 +1,5 @@
+export const userData = {
+    firstName: 'John',
+    lastName: 'Doe',
+    zipCode: '12345',
+};

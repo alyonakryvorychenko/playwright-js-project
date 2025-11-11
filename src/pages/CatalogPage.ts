@@ -1,7 +1,7 @@
-import { Locator, expect, Page } from '@playwright/test'
+import { Locator, expect, Page } from '@playwright/test';
+import { SortOrder } from '../../test-data/SortOrder';
 
 export class CatalogPage {
-    // readonly page: Page;
     readonly productSort: Locator;
     readonly sortItemsLocators: Locator;
     readonly productPrices: Locator;
@@ -35,20 +35,22 @@ export class CatalogPage {
 
     async checkSortElements<T>(
         values: T[],
-        order: 'az' | 'za' | 'lohi' | 'hilo') {
-        let expectedList: T[];
+        order: SortOrder) {
+        let expectedList: T[] = [...values];
         switch (order) {
-            case 'az':
+            case SortOrder.AZ:
                 expectedList = [...values].sort((a: any, b: any) => a.localeCompare(b));
                 break;
-            case 'za':
+            case SortOrder.ZA:
                 expectedList = [...values].sort((a: any, b: any) => b.localeCompare(a));
                 break;
-            case 'lohi':
-                expectedList = [...values].sort((a: any, b: any) => a - b);
+            case SortOrder.LOHI:
+                expectedList = [...values].sort((a: any, b: any) => (a as unknown as number) - (b as unknown as number));
                 break;
-            case 'hilo':
-                expectedList = [...values].sort((a: any, b: any) => b - a);
+            case SortOrder.HILO:
+                expectedList = [...values].sort((a: any, b: any) => (b as unknown as number) - (a as unknown as number));
+                break;
+            default:
                 break;
         }
         console.log('Current List:', values);
