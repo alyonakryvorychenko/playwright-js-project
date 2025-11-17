@@ -10,6 +10,7 @@ on:
 env:
   TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
   TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+  BASE_URL: ${{ secrets.BASE_UR }}
   
 
 jobs:
