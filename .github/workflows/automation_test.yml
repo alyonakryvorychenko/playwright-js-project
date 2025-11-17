@@ -34,14 +34,11 @@ jobs:
         run: npx playwright install chromium --with-deps
 #         npx playwright install chromium/firefox/webkit
         
-      # - name: Run all Playwright tests
-      #   run: npm test
+      - name: Run all Playwright tests
+        run: npm test
 
-      - name: Run first set
-        run: npm run test:login
-
-      # - name: Run second set
-      #   run: npm run test:second
+      # - name: Run first set
+      #   run: npm run test:login
 
       - name: Upload test report
         if: always()
