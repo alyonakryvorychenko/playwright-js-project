@@ -24,13 +24,14 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium
+#         npx playwright install chromium/firefox/webkit
         
-      # - name: Run all Playwright tests
-      #   run: npm test
+      - name: Run all Playwright tests
+        run: npm test
 
-      - name: Run first set
-        run: npm run test:first
+      # - name: Run first set
+      #   run: npm run test:first
 
       # - name: Run second set
       #   run: npm run test:second
