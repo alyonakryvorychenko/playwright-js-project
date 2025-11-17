@@ -6,6 +6,12 @@ on:
       - main
   pull_request:
 
+
+env:
+  TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
+  TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+  
+
 jobs:
   test:
     name: Run Playwright Tests
