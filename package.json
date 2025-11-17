@@ -6,7 +6,10 @@
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "show-report": "npx playwright show-report"
+    "show-report": "npx playwright show-report",
+    "test:login": "npx playwright test tests/login.spec.ts",
+    "test:catalog": "npx playwright test tests/catalog.spec.ts",
+    "test:checkout": "npx playwright test tests/checkout.spec.ts"
   },
   "keywords": [],
   "author": "",
