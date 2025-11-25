@@ -53,9 +53,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      ######################################################################
-      # 1. Decide browser(s) for installation and running
-      ######################################################################
       - name: Determine browser selection
         id: browser-logic
         run: |
@@ -72,9 +69,7 @@ jobs:
             echo "browser=${{ github.event.inputs.browser }}" >> $GITHUB_OUTPUT
           fi
 
-      ######################################################################
-      # 2. Install correct browsers based on logic
-      ######################################################################
+          
       - name: Install Playwright browsers
         run: |
           if [ "${{ steps.browser-logic.outputs.browser }}" = "all" ]; then
@@ -85,9 +80,6 @@ jobs:
             npx playwright install ${{ steps.browser-logic.outputs.browser }} --with-deps
           fi
 
-      ######################################################################
-      # 3. Determine test path based on user selection
-      ######################################################################
       - name: Determine test suite
         id: suite-logic
         run: |
@@ -104,9 +96,6 @@ jobs:
             "all")      echo "suite=" >> $GITHUB_OUTPUT ;; # run all tests
           esac
 
-      ######################################################################
-      # 4. Run tests with correct browser + correct suite
-      ######################################################################
       - name: Run Playwright tests
         run: |
           if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -127,9 +116,6 @@ jobs:
            npx playwright test $SUITE --project=$BROWSER
            fi
 
-      ######################################################################
-      # 5. Upload report
-      ######################################################################
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
