@@ -17,13 +17,23 @@ on:
           - login
           - catalog
           - checkout
-
+      browser:
+        description: "Choose browser to run tests on"
+        required: true
+        default: chromium
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - chrome
+          - edge
+          - all
 
 env:
   TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
   TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
   BASE_URL: ${{ secrets.BASE_URL }}
-  
 
 jobs:
   test:
@@ -39,19 +49,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
+
       - name: Install dependencies
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
-#         npx playwright install chromium/firefox/webkit
-        
+        run: npx playwright install --with-deps
+      #         npx playwright install chromium/firefox/webkit -with-deps
+
       # - name: Run all Playwright tests
       #   run: npm test
 
       # - name: Run first set
       #   run: npm run test:login
+      - name: Run Playwright tests on browser
+        run: |
+             if [ "${{ github.event.inputs.browser }}" = "all" ]; then
+               npx playwright test --browser=chromium --browser=firefox --browser=webkit --browser=chrome --browser=edge
+              else
+              npx playwright test --browser=${{ github.event.inputs.browser }}
+             fi
+
       - name: Run selected tests
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
