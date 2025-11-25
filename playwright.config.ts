@@ -1,8 +1,6 @@
 // playwright.config.js
 const { defineConfig, devices } = require('@playwright/test');
 
-const isCI = !!process.env.CI;
-
 module.exports = defineConfig({
   testDir: 'tests',
   timeout: 30000,
@@ -17,17 +15,18 @@ module.exports = defineConfig({
     video: 'retain-on-failure',
     trace: 'on-first-retry',
   },
-  projects: isCI 
-  ? [
-        // All browsers ONLY in CI
-        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-        { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-        { name: 'chrome', use: { channel: 'chrome', ...devices['Desktop Chrome'] } },
-        { name: 'edge', use: { channel: 'msedge', ...devices['Desktop Edge'] } },
-      ]
-    : [
-        // Local development → ONLY chromium
-        { name: 'chromium', use: { ...devices['Desktop Chrome'] } }
-      ]
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: "firefox",use: { ...devices["Desktop Firefox"] },},
+    {
+      name: "webkit",use: { ...devices["Desktop Safari"] },},
+    {
+      name: "chrome", use: {channel: "chrome",...devices["Desktop Chrome"],},
+    },
+    {
+      name: "edge",use: {channel: "msedge",...devices["Desktop Edge"],
+      },
+    },
+  ]
 });
