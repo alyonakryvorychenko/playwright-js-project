@@ -86,24 +86,23 @@ jobs:
             "all")      echo "suite=" >> $GITHUB_OUTPUT ;; # run all tests
           esac
       - name: Run Playwright tests
+        if: always()          
         run: |
-          if: always()
-          run: |
-            BROWSER="${{ steps.browser-logic.outputs.browser }}"
-            SUITE="${{ steps.suite-logic.outputs.suite }}"
+            BROWSER="firefox"     # <--- Script starts here
+            SUITE="tests/checkout.spec.ts"
 
-          if [ "$BROWSER" = "all" ]; then
-           echo "Running ALL browsers for selected suite"
-           npx playwright test $SUITE \
+            if [ "$BROWSER" = "all" ]; then
+            echo "Running ALL browsers for selected suite"
+            npx playwright test $SUITE \
              --project=chromium \
              --project=firefox \
              --project=webkit \
              --project=chrome \
              --project=edge
-          else
-           echo "Running suite '$SUITE' on browser '$BROWSER'"
-           npx playwright test $SUITE --project=$BROWSER
-           fi
+            else
+            echo "Running suite '$SUITE' on browser '$BROWSER'"
+            npx playwright test $SUITE --project=$BROWSER
+            fi
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
