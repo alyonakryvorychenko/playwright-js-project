@@ -5,6 +5,18 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+    inputs:
+      testSuite:
+        description: "Choose which test file to run"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - login
+          - catalog
+          - checkout
 
 
 env:
@@ -35,11 +47,24 @@ jobs:
         run: npx playwright install chromium --with-deps
 #         npx playwright install chromium/firefox/webkit
         
-      - name: Run all Playwright tests
-        run: npm test
+      # - name: Run all Playwright tests
+      #   run: npm test
 
       # - name: Run first set
       #   run: npm run test:login
+      - name: Run selected tests
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            case "${{ github.event.inputs.testSuite }}" in
+              "login") npm run test:login ;;
+              "catalog") npm run test:catalog ;;
+              "checkout") npm run test:checkout ;;
+              "all") npm test ;;
+            esac
+          else
+            # On push → always run all tests
+            npm test
+          fi
 
       - name: Upload test report
         if: always()
