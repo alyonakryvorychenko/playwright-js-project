@@ -109,21 +109,23 @@ jobs:
       ######################################################################
       - name: Run Playwright tests
         run: |
-          TEST_PATH="${{ steps.suite-logic.outputs.suite }}"
-          BROWSER="${{ steps.browser-logic.outputs.browser }}"
+          if: ${{ github.event_name == 'workflow_dispatch' }}
+          run: |
+            BROWSER="${{ steps.browser-logic.outputs.browser }}"
+            SUITE="${{ steps.suite-logic.outputs.suite }}"
 
           if [ "$BROWSER" = "all" ]; then
-            echo "Running ALL tests in ALL browsers"
-            npx playwright test $TEST_PATH \
-              --project=chromium \
-              --project=firefox \
-              --project=webkit \
-              --project=chrome \
-              --project=edge
+          echo "Running ALL browsers for selected suite"
+          npx playwright test $SUITE \
+             --project=chromium \
+             --project=firefox \
+             --project=webkit \
+             --project=chrome \
+             --project=edge
           else
-            echo "Running tests on browser: $BROWSER"
-            npx playwright test $TEST_PATH --project=$BROWSER
-          fi
+           echo "Running suite '$SUITE' on browser '$BROWSER'"
+           npx playwright test $SUITE --project=$BROWSER
+           fi
 
       ######################################################################
       # 5. Upload report
