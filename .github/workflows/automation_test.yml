@@ -56,7 +56,6 @@ jobs:
       - name: Determine browser selection
         id: browser-logic
         run: |
-          # Default browser (for push/pull)
           if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
             echo "browser=chromium" >> $GITHUB_OUTPUT
             exit 0
@@ -98,14 +97,14 @@ jobs:
 
       - name: Run Playwright tests
         run: |
-          if: ${{ github.event_name == 'workflow_dispatch' }}
+          if: always()
           run: |
             BROWSER="${{ steps.browser-logic.outputs.browser }}"
             SUITE="${{ steps.suite-logic.outputs.suite }}"
 
           if [ "$BROWSER" = "all" ]; then
-          echo "Running ALL browsers for selected suite"
-          npx playwright test $SUITE \
+           echo "Running ALL browsers for selected suite"
+           npx playwright test $SUITE \
              --project=chromium \
              --project=firefox \
              --project=webkit \
