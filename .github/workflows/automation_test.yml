@@ -67,7 +67,7 @@ jobs:
              if [ "${{ github.event.inputs.browser }}" = "all" ]; then
                npx playwright test --project=chromium --project=firefox --project=webkit --project=chrome --project=edge
               else
-              npx playwright test --roject=${{ github.event.inputs.browser }}
+              npx playwright test --project=${{ github.event.inputs.browser }}
              fi
 
       - name: Run selected tests
