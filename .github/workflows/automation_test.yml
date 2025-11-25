@@ -34,7 +34,6 @@ env:
   TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
   TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
   BASE_URL: ${{ secrets.BASE_URL }}
-  CI: true    # <<< IMPORTANT: tells Playwright to use CI project list
 
 jobs:
   test:
@@ -54,25 +53,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Install Playwright browsers (based on selection)
+        run: |
+           if [ "${{ github.event.inputs.browser }}" = "all" ] || [ -z "${{ github.event.inputs.browser }}" ]; then
+            echo "Installing ALL Playwright browsers..."
+            npx playwright install --with-deps
+           else
+            echo "Installing only selected browser: ${{ github.event.inputs.browser }}"
+            npx playwright install ${{ github.event.inputs.browser }} --with-deps
+           fi
       #         npx playwright install chromium/firefox/webkit -with-deps
 
-      # - name: Run all Playwright tests
-      #   run: npm test
-
-      # - name: Run first set
-      #   run: npm run test:login
+      # - name: Run first set or all test
+      #   run: npm run test:login/test
       - name: Run Playwright tests on browser
         run: |
              if [ "${{ github.event.inputs.browser }}" = "all" ]; then
-              npx playwright test \
-              --project=chromium \
-              --project=firefox \
-              --project=webkit \
-              --project=chrome \
-              --project=edge
-             else
+               npx playwright test --project=chromium --project=firefox --project=webkit --project=chrome --project=edge
+              else
               npx playwright test --project=${{ github.event.inputs.browser }}
              fi
 
