@@ -1,16 +1,16 @@
+---
 name: Run Playwright Tests
-
 on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request: null
   workflow_dispatch:
     inputs:
       testSuite:
-        description: "Choose which test file to run"
+        description: Choose which test file to run
         required: true
-        default: "all"
+        default: all
         type: choice
         options:
           - all
@@ -18,7 +18,7 @@ on:
           - catalog
           - checkout
       browser:
-        description: "Choose browser to run tests on"
+        description: Choose browser to run tests on
         required: true
         default: chromium
         type: choice
@@ -29,30 +29,24 @@ on:
           - chrome
           - edge
           - all
-
 env:
   TEST_USER_NAME: ${{ secrets.TEST_USER_NAME }}
   TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
   BASE_URL: ${{ secrets.BASE_URL }}
-
 jobs:
   test:
     name: Run Playwright Tests
     runs-on: ubuntu-latest
     environment: prod
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm ci
-
       - name: Determine browser selection
         id: browser-logic
         run: |
@@ -67,10 +61,8 @@ jobs:
           else
             echo "browser=${{ github.event.inputs.browser }}" >> $GITHUB_OUTPUT
           fi
-
-          
       - name: Install Playwright browsers
-        run: |
+        run: >
           if [ "${{ steps.browser-logic.outputs.browser }}" = "all" ]; then
             echo "Installing ALL Playwright browsers..."
             npx playwright install --with-deps
@@ -78,7 +70,6 @@ jobs:
             echo "Installing browser: ${{ steps.browser-logic.outputs.browser }}"
             npx playwright install ${{ steps.browser-logic.outputs.browser }} --with-deps
           fi
-
       - name: Determine test suite
         id: suite-logic
         run: |
@@ -94,7 +85,6 @@ jobs:
             "checkout") echo "suite=tests/checkout.spec.ts" >> $GITHUB_OUTPUT ;;
             "all")      echo "suite=" >> $GITHUB_OUTPUT ;; # run all tests
           esac
-
       - name: Run Playwright tests
         run: |
           if: always()
@@ -114,7 +104,6 @@ jobs:
            echo "Running suite '$SUITE' on browser '$BROWSER'"
            npx playwright test $SUITE --project=$BROWSER
            fi
-
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
