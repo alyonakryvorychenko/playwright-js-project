@@ -1,10 +1,10 @@
-name: Run Playwright Tests 2
+name: Parametrized workflow for test/browser
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
   workflow_dispatch:
     inputs:
       testSuite:
@@ -26,8 +26,7 @@ on:
           - chromium
           - firefox
           - webkit
-          - chrome
-          - edge
+          - msedge
           - all
 
 env:
@@ -65,7 +64,7 @@ jobs:
       - name: Run Playwright tests on browser
         run: |
              if [ "${{ github.event.inputs.browser }}" = "all" ]; then
-               npx playwright test --browser=chromium --browser=firefox --browser=webkit --browser=chrome --browser=edge
+               npx playwright test --browser=chromium --browser=firefox --browser=webkit --browser=chrome --browser=msedge
               else
               npx playwright test --browser=${{ github.event.inputs.browser }}
              fi
