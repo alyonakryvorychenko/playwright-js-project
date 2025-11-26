@@ -26,7 +26,7 @@ on:
           - chromium
           - firefox
           - webkit
-          - edge
+          - msedge
           - all
 
 env:
